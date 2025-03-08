@@ -5,7 +5,7 @@ import { useRef, MouseEvent } from "react";
 import Button from "./Button";
 import AnimatedTitle from "./AnimatedTitle";
 
-const FloatingImage = () => {
+const Story = () => {
   const frameRef = useRef<HTMLImageElement | null>(null); // Explicitly define ref type
 
   const handleMouseMove = (e: MouseEvent<HTMLImageElement>) => {
@@ -124,4 +124,4 @@ const FloatingImage = () => {
   );
 };
 
-export default FloatingImage;
+export default Story;

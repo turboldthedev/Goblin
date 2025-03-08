@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, ReactNode, MouseEvent } from "react";
-import { TiLocationArrow } from "react-icons/ti";
+
 import { BentoCard } from "./BentoCard";
 
 // BentoTilt Props Type

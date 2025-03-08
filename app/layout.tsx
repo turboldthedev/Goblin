@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
-import CustomWagmiProvider from "@/app/provider/WagmiProvider";
+import CustomWagmiProvider from "@/provider/WagmiProvider";
 
 export const metadata: Metadata = {
   title: "Goblin",

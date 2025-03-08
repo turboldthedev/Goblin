@@ -1,12 +1,12 @@
-import About from "./components/About";
-import Hero from "./components/Hero";
-import NavBar from "./components/Navbar";
-import Features from "./components/Features";
-import Story from "./components/Story";
-import Contact from "./components/Contact";
-import Footer from "./components/Footer";
-import Text from "./components/Text";
-import FlowingLogoSection from "./components/FlowingLogo";
+import About from "@/components/About";
+import Contact from "@/components/Contact";
+import Features from "@/components/Features";
+import FlowingLogoSection from "@/components/FlowingLogo";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import NavBar from "@/components/Navbar";
+import Story from "@/components/Story";
+import Text from "@/components/Text";
 
 export default function Home() {
   return (

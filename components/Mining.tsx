@@ -4,24 +4,25 @@
 import { useState, useMemo, useEffect } from "react";
 import { useAccount, useBalance, useConnect, useDisconnect } from "wagmi";
 import { Copy, Wallet, Clock, AlertCircle } from "lucide-react";
-import { Button } from "@/app/components/ui/button";
-import { Input } from "@/app/components/ui/input";
+import { Button } from "./ui/button";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/app/components/ui/card";
-import { Label } from "@/app/components/ui/label";
+} from "./ui/card";
+import { Label } from "./ui/label";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/app/components/ui/tooltip";
+} from "./ui/tooltip";
+import { Input } from "./ui/input";
 
-export default function MiningPage() {
+export default function Mining() {
   const { address, isConnected: wagmiConnected } = useAccount();
   //   const { data: balance } = useBalance({ address });
   const [balance, setBalance] = useState(1000);

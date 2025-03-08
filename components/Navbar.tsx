@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/app/components/ui/dropdown-menu";
+} from "./ui/dropdown-menu";
 import {
   ChevronDown,
   Copy,
