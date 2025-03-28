@@ -1,25 +1,35 @@
-import About from "@/components/About";
-import Contact from "@/components/Contact";
-import Features from "@/components/Features";
-import FlowingLogoSection from "@/components/FlowingLogo";
-import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
 import NavBar from "@/components/Navbar";
-import Story from "@/components/Story";
-import Text from "@/components/Text";
+import Hero from "@/components/Hero";
+import Leaderboard from "@/components/Leaderboard";
+import { getServerSession } from "next-auth";
+import authOptions from "@/lib/authConfig";
+import axios from "axios";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  let userRankData;
+  if (session) {
+    const userRes = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${session?.user.xUsername}`
+    );
+    userRankData = userRes.data;
+  }
+
+  const usersRes = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_URL}/api/users`
+  );
+  const usersRankData = usersRes.data;
+  console.log(usersRankData);
   return (
-    <main className="relative min-h-screen w-screen overflow-x-hidden bg-gray-50">
+    <div className="min-h-screen bg-[#1C1C1C] text-white">
+      {/* Navigation */}
       <NavBar />
-      <Hero />
-      <About />
-      <Text />
-      <Features />
-      <Story />
-      <FlowingLogoSection />
-      <Contact />
-      <Footer />
-    </main>
+
+      {/* Hero Section */}
+      <Hero userRankData={userRankData} />
+      {/* Leaderboard */}
+      <Leaderboard usersRankData={usersRankData} />
+    </div>
   );
 }
