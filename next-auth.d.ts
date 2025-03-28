@@ -25,6 +25,6 @@ declare module "next-auth/jwt" {
     followersCount?: number;
     xUsername?: string;
     profileImage?: string;
-    isAdmin?: boolean;
+    isAdmin: boolean;
   }
 }

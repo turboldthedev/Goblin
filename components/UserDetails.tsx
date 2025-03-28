@@ -1,76 +1,88 @@
 "use client";
 
+import React, { FC, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
+import { motion } from "framer-motion";
+import { Award, LogOut, Twitter } from "lucide-react";
 import { PiXLogoLight } from "react-icons/pi";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { FC, useEffect, useState } from "react";
-
-import { UserResponse } from "@/types";
+import { Card, CardContent } from "@/components/ui/card";
 import WalletConnect from "./WalletConnect";
+import { UserResponse } from "@/types";
 
 interface LoginAreaProps {
   userRank: UserResponse;
 }
+
 const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
   const { data: session, status } = useSession();
-
   const [error, setError] = useState<string | null>(null);
 
+  if (status === "loading") {
+    return <p className="text-center text-lime-300">Loading...</p>;
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center text-center space-y-6 p-8">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.2 }}
+      className="space-y-6"
+    >
       {status === "authenticated" ? (
-        // Display this if the user is logged in
-        <div className="space-y-4 flex flex-col items-center">
-          <h2 className="text-2xl font-bold">
-            Welcome back, {session?.user?.name}!
-          </h2>
-          {error ? (
-            <div className="text-red-500">{error}</div>
-          ) : (
-            <>
-              <div className="text-lg">
-                Your current rank:{" "}
-                <span className="font-bold">
-                  #{userRank.rank || "Loading..."}
-                </span>
-              </div>
-              <div className="text-lg">
-                Your Paw Points:{" "}
-                <span className="font-bold">
-                  {userRank.user.goblinPoints || 0}
-                </span>
-              </div>
-            </>
-          )}
-          <p className="text-gray-400">
-            Keep tweeting with #boithebear to climb the leaderboard!
-          </p>
-         <WalletConnect/>
-          <Button
-            className="bg-[#5B8B5B] hover:bg-[#4A7A4A] px-6 py-3 rounded-md flex items-center"
-            onClick={() => signOut()}>
-            Sign out
-          </Button>
-        </div>
-      ) : (
         <>
-          <div className="space-y-2">
-            <h2 className="text-2xl font-bold">Curious about your rank?</h2>
-            <h3 className="text-xl font-bold">Ready to connect?</h3>
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2">
+              Welcome back,{" "}
+              <span className="bg-gradient-to-r from-lime-300 to-lime-500 text-transparent bg-clip-text">
+                {session?.user?.name || session?.user?.xUsername}!
+              </span>
+            </h1>
+            <div className="flex items-center gap-2 text-lime-400">
+              <Award className="h-5 w-5" />
+              <span>
+                Your current rank:{" "}
+                <span className="font-bold">#{userRank?.rank || "-"}</span>
+              </span>
+            </div>
+            <div className="flex items-center gap-2 mt-1 text-lime-400">
+              <Badge
+                variant="outline"
+                className="border-lime-500/50 bg-lime-500/10 text-lime-300"
+              >
+                {userRank?.user?.goblinPoints || 0} Goblin Points
+              </Badge>
+            </div>
           </div>
-          <div className="text-lg">
-            Join the <span className="font-bold">134476</span> people that have
-            already connected...
+
+          <WalletConnect />
+          <div className="bg-lime-500/10 border border-lime-500/20 rounded-lg p-4 flex items-center gap-4">
+            <Twitter className="h-6 w-6 text-lime-400" />
+            <p className="text-sm">
+              Keep tweeting with{" "}
+              <span className="font-bold text-lime-300">#goblin</span> to climb
+              the leaderboard!
+            </p>
           </div>
+        </>
+      ) : (
+        <div className="text-center space-y-6">
+          <h2 className="text-2xl font-bold">Curious about your rank?</h2>
+          <p className="text-lg">
+            Join the <span className="font-bold">134,476</span> people already
+            connected
+          </p>
           <Button
-            className="bg-[#5B8B5B] hover:bg-[#4A7A4A] px-6 py-3 rounded-md flex items-center"
-            onClick={() => signIn("twitter")}>
+            className="bg-lime-600 hover:bg-lime-400 px-6 py-3 rounded-md flex items-center mx-auto"
+            onClick={() => signIn("twitter")}
+          >
             Connect your <PiXLogoLight className="ml-2" /> account
           </Button>
-          <p className="text-gray-400">Don't be late, join Boi!</p>
-        </>
+          <p className="text-gray-400">Don't be late, join Goblin!</p>
+        </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

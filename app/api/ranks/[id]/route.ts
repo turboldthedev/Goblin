@@ -1,14 +1,15 @@
+// app/api/ranks/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import User from "@/lib/models/user.model";
 import { connectToDatabase } from "@/lib/mongodb";
-import mongoose from "mongoose";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> } // Correct type for params
 ) {
   await connectToDatabase();
 
+  // Await the params to access the id
   const { id } = await params;
 
   if (!id) {

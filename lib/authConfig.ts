@@ -16,7 +16,7 @@ export const authOptions: NextAuthOptions = {
     jwt,
     async session({ session, token }) {
       if (!session.user) {
-        session.user = {};
+        session.user = { isAdmin: false };
       }
 
       session.accessToken = token.accessToken as string;
@@ -64,7 +64,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
 };
-
 
 const generateGoblinCoins = (followersCount: number): number => {
   if (followersCount >= 100 && followersCount < 1000) {
