@@ -30,7 +30,7 @@ export default {
         violet: {
           "300": "#5724ff",
         },
-        primary: "#00FF00",
+        primary: "#5B8B5B",
         yellow: {
           "100": "#8e983f",
           "300": "#edff66",

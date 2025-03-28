@@ -10,6 +10,7 @@ declare module "next-auth" {
       followersCount?: number;
       xUsername?: string;
       profileImage?: string;
+      isAdmin: boolean;
     };
   }
 
@@ -21,5 +22,9 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     accessToken?: string;
+    followersCount?: number;
+    xUsername?: string;
+    profileImage?: string;
+    isAdmin?: boolean;
   }
 }

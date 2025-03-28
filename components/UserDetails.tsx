@@ -6,11 +6,12 @@ import { Button } from "@/components/ui/button";
 import { FC, useEffect, useState } from "react";
 
 import { UserResponse } from "@/types";
+import WalletConnect from "./WalletConnect";
 
 interface LoginAreaProps {
   userRank: UserResponse;
 }
-const LoginArea: FC<LoginAreaProps> = ({ userRank }) => {
+const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
   const { data: session, status } = useSession();
 
   const [error, setError] = useState<string | null>(null);
@@ -44,10 +45,10 @@ const LoginArea: FC<LoginAreaProps> = ({ userRank }) => {
           <p className="text-gray-400">
             Keep tweeting with #boithebear to climb the leaderboard!
           </p>
+         <WalletConnect/>
           <Button
             className="bg-[#5B8B5B] hover:bg-[#4A7A4A] px-6 py-3 rounded-md flex items-center"
-            onClick={() => signOut()}
-          >
+            onClick={() => signOut()}>
             Sign out
           </Button>
         </div>
@@ -63,8 +64,7 @@ const LoginArea: FC<LoginAreaProps> = ({ userRank }) => {
           </div>
           <Button
             className="bg-[#5B8B5B] hover:bg-[#4A7A4A] px-6 py-3 rounded-md flex items-center"
-            onClick={() => signIn("twitter")}
-          >
+            onClick={() => signIn("twitter")}>
             Connect your <PiXLogoLight className="ml-2" /> account
           </Button>
           <p className="text-gray-400">Don't be late, join Boi!</p>
@@ -74,4 +74,4 @@ const LoginArea: FC<LoginAreaProps> = ({ userRank }) => {
   );
 };
 
-export default LoginArea;
+export default UserDetails;

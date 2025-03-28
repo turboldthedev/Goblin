@@ -15,11 +15,12 @@ const AdminTable = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isSaving, setIsSaving] = useState(false);
 
+  
+
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get<{ users: User[] }>(`/api/users`);
-        console.log(res.data.rankedUsers);
+        const res = await axios.get(`/api/users`);
         setUsers(res.data.rankedUsers);
       } catch (error) {
         console.error("Failed to fetch users", error);
@@ -59,14 +60,17 @@ const AdminTable = () => {
       <table className="w-full border-collapse text-sm bg-gray-900 text-white rounded-lg overflow-hidden">
         <thead>
           <tr className="bg-gray-700">
+            <th className="p-3 text-left">No.</th>
             <th className="p-3 text-left">Username</th>
             <th className="p-3 text-left">Followers</th>
             <th className="p-3 text-left">Goblin Points</th>
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => (
+          {users?.map((user, index) => (
             <tr key={user._id} className="border-b border-gray-800">
+              <td className="p-3 text-gray-400">#{index + 1}</td>{" "}
+              {/* ✅ Row number */}
               <td className="p-3">{user.xUsername}</td>
               <td className="p-3">{user.followersCount}</td>
               <td className="p-3">
@@ -83,13 +87,14 @@ const AdminTable = () => {
           ))}
         </tbody>
       </table>
-      <button
-        onClick={handleSave}
-        disabled={isSaving}
-        className="mt-5 px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold disabled:opacity-50"
-      >
-        {isSaving ? "Saving..." : "Save All Changes"}
-      </button>
+      <div className="flex justify-end">
+        <button
+          onClick={handleSave}
+          disabled={isSaving}
+          className="mt-5 px-6 py-2 bg-green-600 hover:bg-green-700 rounded text-white font-semibold disabled:opacity-50 ">
+          {isSaving ? "Saving..." : "Save All Changes"}
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,11 +1,16 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect } from "react";
 
 const NavBar = () => {
+  const { data: session, status } = useSession();
+  const isAdmin = session?.user.isAdmin;
   return (
-    <nav className=" px-8 py-5">
-      <div className="container flex items-center justify-between ">
+    <nav className="px-8 py-5">
+      <div className="container flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Image
             src="/img/logo.png"
@@ -16,16 +21,22 @@ const NavBar = () => {
           />
           <h1 className="text-xl font-bold">Goblin</h1>
         </div>
+
         <div className="flex gap-6 text-gray-300 text-xs">
-          <a href="#" className="hover:text-white">
+          {isAdmin && (
+            <Link href="/admin" className="hover:text-white">
+              Admin
+            </Link>
+          )}
+          <Link href="#" className="hover:text-white">
             Grindboard
-          </a>
-          <a href="#" className="hover:text-white">
+          </Link>
+          <Link href="#" className="hover:text-white">
             Boi Club
-          </a>
-          <a href="#" className="hover:text-white">
+          </Link>
+          <Link href="#" className="hover:text-white">
             Gallery
-          </a>
+          </Link>
         </div>
       </div>
     </nav>

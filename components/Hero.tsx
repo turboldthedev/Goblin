@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { signIn, useSession } from "next-auth/react";
 import { PiXLogoLight } from "react-icons/pi";
 import { FC, useEffect, useState } from "react";
-import LoginArea from "./LoginArea";
+import UserDetails from "./UserDetails";
 import { UserResponse } from "@/types";
 
 interface SessionUser {
@@ -46,7 +46,7 @@ const Hero: FC<HeroProps> = ({ userRankData }) => {
           </div>
         </div>
 
-        <LoginArea userRank={userRankData} />
+        <UserDetails userRank={userRankData} />
       </div>
     </section>
   );

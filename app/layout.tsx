@@ -4,6 +4,7 @@ import CustomWagmiProvider from "@/provider/WagmiProvider";
 import SessionProvider from "../provider/AuthProvider";
 import { getServerSession } from "next-auth";
 import { connectToDatabase } from "@/lib/mongodb";
+import authOptions from "@/lib/authConfig";
 
 export const metadata: Metadata = {
   title: "Goblin",
@@ -15,7 +16,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
+  const session = await getServerSession(authOptions);
   await connectToDatabase(); // Establish connection on server startup
   return (
     <html lang="en">

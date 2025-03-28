@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/lib/models/user.model";
+import authOptions from "@/lib/authConfig";
+import { getServerSession } from "next-auth";
 
 interface UserUpdatePayload {
   _id: string;
@@ -8,6 +10,10 @@ interface UserUpdatePayload {
 }
 
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
   await connectToDatabase();
 
   try {

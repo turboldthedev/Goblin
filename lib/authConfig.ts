@@ -1,8 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
-import axios from "axios";
 import User from "@/lib/models/user.model";
 import { connectToDatabase } from "./mongodb";
+import { jwt } from "./jwt";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -13,33 +13,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        token.accessToken = account.access_token;
-
-        try {
-          const response = await axios.get(
-            "https://api.twitter.com/2/users/me",
-            {
-              headers: {
-                Authorization: `Bearer ${account.access_token}`,
-              },
-              params: {
-                "user.fields": "public_metrics,profile_image_url",
-              },
-            }
-          );
-
-          token.followersCount =
-            response.data.data.public_metrics.followers_count;
-          token.xUsername = response.data.data.username;
-          token.profileImage = response.data.data.profile_image_url;
-        } catch (error) {
-          console.error("Error fetching Twitter user data:", error);
-        }
-      }
-      return token;
-    },
+    jwt,
     async session({ session, token }) {
       if (!session.user) {
         session.user = {};
@@ -49,6 +23,7 @@ export const authOptions: NextAuthOptions = {
       session.user.followersCount = token.followersCount as number;
       session.user.xUsername = token.xUsername as string;
       session.user.profileImage = token.profileImage as string;
+      session.user.isAdmin = token.isAdmin as boolean;
 
       await connectToDatabase();
       try {
@@ -90,7 +65,7 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-// Function to assign random points based on follower count
+
 const generateGoblinCoins = (followersCount: number): number => {
   if (followersCount >= 100 && followersCount < 1000) {
     return Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
