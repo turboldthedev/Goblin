@@ -10,19 +10,24 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import UserTable from "./UserTable";
 import { User } from "@/types";
+import Loader from "./Loader";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setIsLoading(true);
         const res = await axios.get(`/api/users`);
         setUsers(res.data.rankedUsers);
       } catch (error) {
         console.error("Failed to fetch users", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -88,18 +93,26 @@ export default function AdminDashboard() {
             />
           </div>
 
-          <UserTable users={filteredUsers} onPointChange={handlePointChange} />
-
-          <div className="flex justify-end mt-6">
-            <Button
-              className={`bg-lime-600 hover:bg-lime-700 text-white ${isSaving ? "opacity-50 cursor-not-allowed" : ""}`}
-              onClick={handleSave}
-              disabled={isSaving}
-            >
-              <Save className="h-4 w-4 mr-2" />
-              {isSaving ? "Saving..." : "Save All Changes"}
-            </Button>
-          </div>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <>
+              <UserTable
+                users={filteredUsers}
+                onPointChange={handlePointChange}
+              />
+              <div className="flex justify-end mt-6">
+                <Button
+                  className={`bg-lime-600 hover:bg-lime-700 text-white ${isSaving ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={handleSave}
+                  disabled={isSaving}
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  {isSaving ? "Saving..." : "Save All Changes"}
+                </Button>
+              </div>
+            </>
+          )}
         </motion.div>
       </main>
     </div>

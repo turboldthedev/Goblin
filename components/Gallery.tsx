@@ -1,7 +1,7 @@
-// Updated and Optimized Gallery Page
+// Updated and Optimized Gallery Page with Loading
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -10,6 +10,7 @@ import UploadDialog from "./UploadDialog";
 import HeaderSection from "./HeaderSection";
 import SearchAndViewToggle from "./SearchAndViewToggle";
 import GalleryGrid from "./GalleryGrid";
+import Loader from "./Loader";
 
 export interface GalleryItem {
   _id: string;
@@ -23,21 +24,37 @@ export default function GalleryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [view, setView] = useState<"grid" | "masonry">("grid");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const { data: session } = useSession();
   const isAdmin = session?.user?.isAdmin as boolean;
 
   useEffect(() => {
     const fetchGallery = async () => {
-      const res = await axios.get("/api/gallery");
-      setItems(res.data);
+      try {
+        setIsLoading(true);
+        const res = await axios.get("/api/gallery");
+        setItems(res.data);
+      } catch (error) {
+        console.error("Failed to fetch gallery:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchGallery();
   }, []);
 
   const refreshGalleryItems = async () => {
-    const res = await axios.get("/api/gallery");
-    setItems(res.data);
+    try {
+      setIsLoading(true);
+      const res = await axios.get("/api/gallery");
+      setItems(res.data);
+    } catch (error) {
+      console.error("Failed to refresh gallery:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const filteredItems = items.filter((item) =>
@@ -72,7 +89,12 @@ export default function GalleryPage() {
             setView={setView}
           />
 
-          <GalleryGrid items={filteredItems} view={view} />
+          {/* Loader */}
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <GalleryGrid items={filteredItems} view={view} />
+          )}
         </motion.div>
       </main>
     </div>

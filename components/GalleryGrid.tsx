@@ -49,7 +49,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ items, view }) => {
               <h3 className="font-medium text-lime-300 truncate">
                 {item.title}
               </h3>
-              <p className="text-xs text-lime-400 mt-1">by {item.createdBy}</p>
             </div>
           </div>
         </motion.div>
