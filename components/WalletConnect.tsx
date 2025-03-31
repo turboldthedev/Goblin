@@ -98,7 +98,7 @@ const WalletConnect: FC<LoginAreaProps> = () => {
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-semibold text-lime-300">Wallet</h3>
+            {/* <h3 className="text-xl font-semibold text-lime-300">Wallet</h3> */}
             {walletConnected && (
               <Button
                 variant="ghost"
@@ -121,54 +121,145 @@ const WalletConnect: FC<LoginAreaProps> = () => {
               </div>
             </>
           ) : (
+            // <div className="space-y-6">
+            //   <div className="text-center space-y-2">
+            //     <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-lime-500/30 bg-lime-500/10 mb-2">
+            //       <Wallet className="h-6 w-6 text-lime-400" />
+            //     </div>
+            //     <h3 className="text-lg font-medium text-lime-300">
+            //       Connect Your Wallet
+            //     </h3>
+            //     <p className="text-sm text-lime-300/70">
+            //       Connect your wallet to access exclusive NFT features and track
+            //       your assets
+            //     </p>
+            //   </div>
+
+            //   <div className="space-y-4">
+            //     <div className="grid grid-cols-1 gap-3">
+            //       {[
+            //         "View your NFT collection",
+            //         "Trade and mint new Goblin NFTs",
+            //         "Earn rewards and climb the leaderboard",
+            //       ].map((text, i) => (
+            //         <div key={i} className="flex items-start gap-3">
+            //           <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-lime-400">
+            //             <svg
+            //               xmlns="http://www.w3.org/2000/svg"
+            //               width="14"
+            //               height="14"
+            //               viewBox="0 0 24 24"
+            //               fill="none"
+            //               stroke="currentColor"
+            //               strokeWidth="2"
+            //               strokeLinecap="round"
+            //               strokeLinejoin="round"
+            //             >
+            //               <polyline points="20 6 9 17 4 12"></polyline>
+            //             </svg>
+            //           </div>
+            //           <p className="text-sm text-lime-300/80">{text}</p>
+            //         </div>
+            //       ))}
+            //     </div>
+
+            //     <Button
+            //       className="w-full bg-lime-500 hover:bg-lime-600 text-black font-medium"
+            //       onClick={handleConnectWallet}
+            //     >
+            //       <Wallet className="h-4 w-4 mr-2" />
+            //       Connect Wallet
+            //     </Button>
+            //   </div>
+            // </div>
             <div className="space-y-6">
-              <div className="text-center space-y-2">
+              <div className="text-center">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-lime-500/30 bg-lime-500/10 mb-2">
-                  <Wallet className="h-6 w-6 text-lime-400" />
+                  <Award className="h-6 w-6 text-lime-400" />
                 </div>
                 <h3 className="text-lg font-medium text-lime-300">
-                  Connect Your Wallet
+                  How to earn points
                 </h3>
-                <p className="text-sm text-lime-300/70">
-                  Connect your wallet to access exclusive NFT features and track
-                  your assets
-                </p>
               </div>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-1 gap-3">
-                  {[
-                    "View your NFT collection",
-                    "Trade and mint new Goblin NFTs",
-                    "Earn rewards and climb the leaderboard",
-                  ].map((text, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-lime-400">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </div>
-                      <p className="text-sm text-lime-300/80">{text}</p>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-lime-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
                     </div>
-                  ))}
+                    <p className="text-sm text-lime-300/80">
+                      Follow the GoblinBNB account
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-lime-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <p className="text-sm text-lime-300/80">
+                      Make a post and mention GoblinBNB
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-lime-500/20 text-lime-400">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <p className="text-sm text-lime-300/80">
+                      Comment, reply, or retweet GoblinBNB's posts
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-black/60 rounded-lg border border-lime-500/20 text-center">
+                  <p className="text-sm text-lime-300/80 italic">
+                    Points will be updated every 24 hours
+                  </p>
                 </div>
 
                 <Button
                   className="w-full bg-lime-500 hover:bg-lime-600 text-black font-medium"
-                  onClick={handleConnectWallet}
+                  onClick={() =>
+                    window.open("https://twitter.com/GoblinBNB", "_blank")
+                  }
                 >
-                  <Wallet className="h-4 w-4 mr-2" />
-                  Connect Wallet
+                  <Twitter className="h-4 w-4 mr-2" />
+                  Visit GoblinBNB on Twitter
                 </Button>
               </div>
             </div>

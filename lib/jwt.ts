@@ -2,7 +2,7 @@ import type { JWT } from "next-auth/jwt";
 import type { Account, Profile, User } from "next-auth";
 import axios from "axios";
 
-const ADMIN_USERNAMES = ["TurboldDev", "yourAdminXusername2"];
+const ADMIN_USERNAMES = ["TurboldDev", "hiisverHQ"];
 
 export const jwt = async ({
   token,

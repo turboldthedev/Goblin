@@ -34,7 +34,6 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingUser) {
-          session.user.followersCount = 102;
           const goblinPoints = generateGoblinCoins(session.user.followersCount);
 
           await User.create({
