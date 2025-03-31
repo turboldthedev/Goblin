@@ -57,14 +57,14 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
           </div>
 
           <WalletConnect />
-          <div className="bg-lime-500/10 border border-lime-500/20 rounded-lg p-4 flex items-center gap-4">
+          {/* <div className="bg-lime-500/10 border border-lime-500/20 rounded-lg p-4 flex items-center gap-4">
             <Twitter className="h-6 w-6 text-lime-400" />
             <p className="text-sm">
               Keep tweeting with{" "}
               <span className="font-bold text-lime-300">#goblin</span> to climb
               the leaderboard!
             </p>
-          </div>
+          </div> */}
         </>
       ) : (
         <div className="text-center space-y-6">
