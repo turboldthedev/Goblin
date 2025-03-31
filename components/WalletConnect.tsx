@@ -2,7 +2,7 @@
 
 import React, { FC, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { Award, LogOut, Twitter, Wallet } from "lucide-react";
+import { Award, LogOut, Twitter } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";

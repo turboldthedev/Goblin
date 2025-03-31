@@ -7,7 +7,6 @@ import { Award, LogOut, Twitter } from "lucide-react";
 import { PiXLogoLight } from "react-icons/pi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import WalletConnect from "./WalletConnect";
 import { UserResponse } from "@/types";
 
