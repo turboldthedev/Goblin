@@ -11,13 +11,14 @@ import { Input } from "@/components/ui/input";
 import UserTable from "./UserTable";
 import { User } from "@/types";
 import Loader from "./Loader";
+import { useToast } from "@/hooks/use-toast";
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState<User[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { toast } = useToast();
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -48,7 +49,9 @@ export default function AdminDashboard() {
       await axios.post("/api/update-points", {
         users: users.map(({ _id, goblinPoints }) => ({ _id, goblinPoints })),
       });
-      alert("Successfully updated goblin points!");
+      toast({
+        title: "Successfully updated goblin points!",
+      });
     } catch (error) {
       console.error("Failed to update users", error);
       alert("Something went wrong while saving.");

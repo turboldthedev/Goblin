@@ -16,8 +16,7 @@ export const Navbar = () => {
 
   const navLinks = [
     ...(isAdmin ? [{ href: "/admin", label: "Admin" }] : []),
-    { href: "/grindboard", label: "Grindboard" },
-    { href: "/boi-club", label: "Boi Club" },
+
     { href: "/gallery", label: "Gallery" },
   ];
 
