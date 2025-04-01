@@ -79,7 +79,7 @@ const Leaderboard: FC<LeaderboardProps> = ({ usersRankData }) => {
               <div className="grid grid-cols-12 gap-4 p-4 border-b border-lime-500/20 text-lime-300 font-medium">
                 <div className="col-span-1">Rank</div>
                 <div className="col-span-7">User</div>
-                <div className="col-span-4 text-right">Paw Points</div>
+                <div className="col-span-4 text-right">Goblin Points</div>
               </div>
 
               <div className="divide-y divide-lime-500/10">
