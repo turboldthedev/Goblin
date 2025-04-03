@@ -30,8 +30,6 @@ export default async function Home() {
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500 to-transparent"></div>
       </div>
 
-      {/* Header */}
-
       {/* Main Content */}
       <main className="relative z-10 container mx-auto px-4 py-8 md:py-16">
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
