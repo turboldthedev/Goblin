@@ -255,7 +255,7 @@ const WalletConnect: FC<LoginAreaProps> = () => {
                 <Button
                   className="w-full bg-lime-500 hover:bg-lime-600 text-black font-medium"
                   onClick={() =>
-                    window.open("https://twitter.com/GoblinBNB", "_blank")
+                    window.open("https://x.com/GoblinMemeBNB", "_blank")
                   }
                 >
                   <Twitter className="h-4 w-4 mr-2" />
