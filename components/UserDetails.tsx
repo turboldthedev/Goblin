@@ -1,9 +1,9 @@
 "use client";
 
-import React, { FC, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import React, { FC } from "react";
+import { useSession, signIn } from "next-auth/react";
 import { motion } from "framer-motion";
-import { Award, LogOut, Twitter } from "lucide-react";
+import { Award } from "lucide-react";
 import { PiXLogoLight } from "react-icons/pi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ interface LoginAreaProps {
 
 const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
   const { data: session, status } = useSession();
-  const [error, setError] = useState<string | null>(null);
 
   if (status === "loading") {
     return <p className="text-center text-lime-300">Loading...</p>;
@@ -44,14 +43,77 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
                 Your current rank:{" "}
                 <span className="font-bold">#{userRank?.rank || "-"}</span>
               </span>
+
+              <div className="flex items-center gap-2">
+                <span>Your referral link:</span>
+                <div className="relative group">
+                  <div
+                    className="flex items-center gap-1 cursor-pointer bg-lime-500/10 px-2 py-0.5 rounded border border-lime-500/30 hover:bg-lime-500/20 transition-colors"
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        `${process.env.NEXT_PUBLIC_API_URL}?referral_code=${session.user.referralCode}`
+                      );
+                      const tooltip = document.getElementById("copy-tooltip");
+                      if (tooltip) {
+                        tooltip.innerText = "Copied!";
+                        setTimeout(() => {
+                          tooltip.innerText = "Copy code";
+                        }, 2000);
+                      }
+                    }}
+                  >
+                    <span className="font-bold text-lime-300">
+                      {session.user.referralCode}
+                    </span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="text-lime-400"
+                    >
+                      <rect
+                        x="9"
+                        y="9"
+                        width="13"
+                        height="13"
+                        rx="2"
+                        ry="2"
+                      ></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span
+                      id="copy-tooltip"
+                      className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/90 text-lime-300 text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap"
+                    >
+                      Copy code
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2 mt-1 text-lime-400">
-              <Badge
-                variant="outline"
-                className="border-lime-500/50 bg-lime-500/10 text-lime-300"
-              >
-                {userRank?.user?.goblinPoints || 0} Goblin Points
-              </Badge>
+            <div className="flex gap-x-4">
+              <div className="flex items-center gap-2 mt-1 text-lime-400">
+                <Badge
+                  variant="outline"
+                  className="border-lime-500/50 bg-lime-500/10 text-lime-300"
+                >
+                  {userRank?.user?.goblinPoints || 0} Total Goblin Points
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2 mt-1 text-lime-400">
+                <Badge
+                  variant="outline"
+                  className="border-lime-500/50 bg-lime-500/10 text-lime-300"
+                >
+                  {userRank?.user?.referralPoints || 0} Referral Points
+                </Badge>
+              </div>
             </div>
           </div>
 
@@ -74,7 +136,7 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
           </p>
           <Button
             className="bg-lime-600 hover:bg-lime-400 px-6 py-3 rounded-md flex items-center mx-auto"
-            onClick={() => signIn("twitter")}
+            onClick={() => signIn("twitter", { prompt: "login" })}
           >
             Connect your <PiXLogoLight className="ml-2" /> account
           </Button>

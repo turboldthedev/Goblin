@@ -1,21 +1,21 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Schema, Document, model, models } from "mongoose";
 
 export interface IUser extends Document {
-  _id: mongoose.Types.ObjectId;
   xUsername: string;
   followersCount: number;
   goblinPoints: number;
-  lastUpdated: Date;
+  profileImage?: string;
+  referralCode?: string; // New field for referral code
+  referralPoints?: number;
 }
 
-const UserSchema: Schema = new Schema({
+const UserSchema = new Schema<IUser>({
   xUsername: { type: String, required: true, unique: true },
-  followersCount: { type: Number, required: true, default: 0 },
-  goblinPoints: { type: Number, required: true, default: 0 },
-  profileImage: { type: String, default: null },
-  metamaskWalletAddress: { type: String, default: null },
-  lastUpdated: { type: Date, default: Date.now },
+  followersCount: { type: Number, default: 0 },
+  goblinPoints: { type: Number, default: 0 },
+  profileImage: { type: String },
+  referralCode: { type: String, unique: true, sparse: true },
+  referralPoints: { type: Number, default: 0 },
 });
 
-export default mongoose.models.User ||
-  mongoose.model<IUser>("User", UserSchema);
+export default models.User || model<IUser>("User", UserSchema);

@@ -10,6 +10,8 @@ declare module "next-auth" {
       followersCount?: number;
       xUsername?: string;
       profileImage?: string;
+      referralCode: string;
+      goblinPoints?: number;
       isAdmin: boolean;
     };
   }
@@ -25,6 +27,8 @@ declare module "next-auth/jwt" {
     followersCount?: number;
     xUsername?: string;
     profileImage?: string;
+    goblinPoints?: number;
+    referralCode: string;
     isAdmin: boolean;
   }
 }

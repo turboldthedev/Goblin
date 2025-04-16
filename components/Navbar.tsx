@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { LogOut, X } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import { getCookie } from "cookies-next";
 
 export const Navbar = () => {
   const { data: session, status } = useSession();
@@ -102,14 +103,16 @@ export const Navbar = () => {
               {link.label}
             </Link>
           ))}
-          <Button
-            variant="outline"
-            className="w-full border-lime-500/50 text-lime-400 hover:bg-lime-500/10"
-            onClick={() => signOut()}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            Sign out
-          </Button>
+          {status == "authenticated" && (
+            <Button
+              variant="outline"
+              className="w-full border-lime-500/50 text-lime-400 hover:bg-lime-500/10"
+              onClick={() => signOut()}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign out
+            </Button>
+          )}
         </div>
       )}
     </header>

@@ -1,9 +1,9 @@
 import { getServerSession } from "next-auth";
-import authOptions from "@/lib/authConfig";
 import axios from "axios";
 import GoblinCharacter from "@/components/GoblinCharacter";
 import UserDetails from "@/components/UserDetails";
 import Leaderboard from "@/components/Leaderboard";
+import { authOptions } from "@/lib/authConfig";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);

@@ -15,3 +15,13 @@ export const generateGoblinPoints = (followersCount: number): number => {
   }
   return 0; // Default to 0 if the count doesn't match any range
 };
+
+export const generateReferralCode = (): string => {
+  const length = 6;
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+  let code = "";
+  for (let i = 0; i < length; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return code;
+};

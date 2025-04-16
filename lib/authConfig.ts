@@ -3,6 +3,7 @@ import TwitterProvider from "next-auth/providers/twitter";
 import User from "@/lib/models/user.model";
 import { connectToDatabase } from "./mongodb";
 import { jwt } from "./jwt";
+import { generateReferralCode } from "./utils";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,13 +11,20 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       version: "2.0",
+      authorization: {
+        url: "https://twitter.com/i/oauth2/authorize",
+        params: {
+          prompt: "login",
+        },
+      },
     }),
   ],
   callbacks: {
     jwt,
     async session({ session, token }) {
+      // Initialize session.user with default values
       if (!session.user) {
-        session.user = { isAdmin: false };
+        session.user = { isAdmin: false, referralCode: "" };
       }
 
       session.accessToken = token.accessToken as string;
@@ -24,7 +32,7 @@ export const authOptions: NextAuthOptions = {
       session.user.xUsername = token.xUsername as string;
       session.user.profileImage = token.profileImage as string;
       session.user.isAdmin = token.isAdmin as boolean;
-
+      session.user.goblinPoints = token.goblinPoints as number;
       await connectToDatabase();
       try {
         const normalizedUsername =
@@ -34,17 +42,24 @@ export const authOptions: NextAuthOptions = {
         });
 
         if (!existingUser) {
-          const goblinPoints = generateGoblinCoins(session.user.followersCount);
+          session.user.followersCount = 120;
+
+          const referralCode = generateReferralCode();
+          session.user.referralCode = referralCode;
 
           await User.create({
             xUsername: normalizedUsername,
             followersCount: session.user.followersCount || 0,
-            goblinPoints,
+            goblinPoints: session.user.goblinPoints,
+            referralCode,
             profileImage: session.user.profileImage,
             lastUpdated: new Date(),
           });
+
           console.log(`Created new user: ${normalizedUsername}`);
         } else {
+          session.user.referralCode = existingUser.referralCode || "";
+
           await User.updateOne(
             { xUsername: normalizedUsername },
             {
@@ -58,21 +73,9 @@ export const authOptions: NextAuthOptions = {
       } catch (error) {
         console.error("Error handling user in session callback:", error);
       }
-
       return session;
     },
   },
-};
-
-const generateGoblinCoins = (followersCount: number): number => {
-  if (followersCount >= 100 && followersCount < 1000) {
-    return Math.floor(Math.random() * (10000 - 1000 + 1)) + 1000;
-  } else if (followersCount >= 1000 && followersCount < 10000) {
-    return Math.floor(Math.random() * (100000 - 10000 + 1)) + 10000;
-  } else if (followersCount >= 10000) {
-    return Math.floor(Math.random() * (1000000 - 100000 + 1)) + 100000;
-  }
-  return 0; // Default case for users with < 100 followers
 };
 
 export default authOptions;

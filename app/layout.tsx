@@ -3,11 +3,10 @@ import "./globals.css";
 import CustomWagmiProvider from "@/provider/WagmiProvider";
 import SessionProvider from "../provider/AuthProvider";
 import { getServerSession } from "next-auth";
-import { connectToDatabase } from "@/lib/mongodb";
-import authOptions from "@/lib/authConfig";
-
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeClientProvider } from "@/components/ui/theme-provider";
+import ReferralHandler from "@/components/ReferralHandler";
+import { authOptions } from "@/lib/authConfig";
 
 export const metadata: Metadata = {
   title: "Goblin",
@@ -32,6 +31,7 @@ export default async function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
+              <ReferralHandler />
               {children}
               <Toaster />
             </ThemeClientProvider>
