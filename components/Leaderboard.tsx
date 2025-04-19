@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 import { Card } from "./ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
 import Image from "next/image";
+import Link from "next/link";
 
 interface UserRank {
   rankedUsers: {
@@ -89,7 +90,11 @@ const Leaderboard: FC<LeaderboardProps> = ({ usersRankData }) => {
                     className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-lime-500/5 transition"
                   >
                     <div className="col-span-1 font-bold">#{user.rank}</div>
-                    <div className="col-span-7 flex items-center gap-3">
+                    <a
+                      className="col-span-7 flex items-center gap-3"
+                      target="_blank"
+                      href={`https://x.com/${user.xUsername}`}
+                    >
                       <Avatar className="border-2 border-lime-500/30">
                         <AvatarImage
                           src={user.profileImage || "/img/goblin-contact2.webp"}
@@ -105,7 +110,8 @@ const Leaderboard: FC<LeaderboardProps> = ({ usersRankData }) => {
                           @{user.xUsername.toLowerCase()}
                         </p>
                       </div>
-                    </div>
+                    </a>
+
                     <div className="col-span-4 text-right font-bold flex items-center justify-end gap-2">
                       {user.goblinPoints.toLocaleString()}
                       <Image
