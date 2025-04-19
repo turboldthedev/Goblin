@@ -6,7 +6,7 @@ export interface User {
   goblinPoints: number;
   lastUpdated: string;
   metamaskWalletAddress: string;
-
+  referralPoints?: number; // ← Add this line
   // __v: number;
 }
 
