@@ -10,7 +10,7 @@ export interface IUser extends Document {
 }
 
 const UserSchema = new Schema<IUser>({
-  xUsername: { type: String, required: true, unique: true },
+  xUsername: { type: String, required: true, unique: true, sparse: true },
   followersCount: { type: Number, default: 0 },
   goblinPoints: { type: Number, default: 0 },
   profileImage: { type: String },

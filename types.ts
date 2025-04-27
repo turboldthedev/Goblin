@@ -7,6 +7,8 @@ export interface User {
   lastUpdated: string;
   metamaskWalletAddress: string;
   referralPoints?: number; // ← Add this line
+  referralCode?: string; // ← Add this line
+
   // __v: number;
 }
 

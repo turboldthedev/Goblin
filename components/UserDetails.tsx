@@ -51,7 +51,7 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
                     className="flex items-center gap-1 cursor-pointer bg-lime-500/10 px-2 py-0.5 rounded border border-lime-500/30 hover:bg-lime-500/20 transition-colors"
                     onClick={() => {
                       navigator.clipboard.writeText(
-                        `${process.env.NEXT_PUBLIC_API_URL}?referral_code=${session.user.referralCode}`
+                        `${process.env.NEXT_PUBLIC_API_URL}?referral_code=${userRank.user.referralCode}`
                       );
                       const tooltip = document.getElementById("copy-tooltip");
                       if (tooltip) {
@@ -63,7 +63,7 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
                     }}
                   >
                     <span className="font-bold text-lime-300">
-                      {session.user.referralCode}
+                      {userRank.user.referralCode}
                     </span>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,6 @@
 import AdminDashboard from "@/components/AdminDashboard";
-import authOptions from "@/lib/authConfig";
+import { authOptions } from "@/lib/authConfig";
 import { getServerSession } from "next-auth";
-
 import { redirect } from "next/navigation";
 import React from "react";
 

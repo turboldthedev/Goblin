@@ -16,11 +16,6 @@ export default async function Home() {
     userRankData = userRes.data;
   }
 
-  const usersRes = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/users`
-  );
-  const usersRankData = usersRes.data;
-
   return (
     <div className="min-h-screen  text-white overflow-hidden">
       {/* Animated background */}
@@ -40,7 +35,7 @@ export default async function Home() {
         </div>
 
         {/* Leaderboard Section */}
-        <Leaderboard usersRankData={usersRankData} />
+        <Leaderboard />
       </main>
     </div>
   );

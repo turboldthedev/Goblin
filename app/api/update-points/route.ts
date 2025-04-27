@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import User from "@/lib/models/user.model";
-import authOptions from "@/lib/authConfig";
+import { authOptions } from "@/lib/authConfig";
 import { getServerSession } from "next-auth";
 
 interface UserUpdatePayload {

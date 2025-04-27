@@ -1,75 +1,74 @@
 import type { JWT } from "next-auth/jwt";
-import type { Account, Profile, User } from "next-auth";
+import type { Account, Profile } from "next-auth";
 import axios from "axios";
-import { connectToDatabase } from "@/lib/mongodb";
-import UserModel from "@/lib/models/user.model";
+import { connectToDatabase } from "./mongodb";
 import { cookies } from "next/headers";
-import { generateGoblinPoints } from "./utils";
+import { generateGoblinPoints, generateReferralCode } from "./utils";
+import User from "@/lib/models/user.model";
 
-const ADMIN_USERNAMES = ["TurboldDev", "hiisverHQ"];
+const BONUS_PERCENT = 0.05;
 
-export const jwt = async ({
+export async function jwt({
   token,
   account,
 }: {
   token: JWT;
-  user?: User;
   account?: Account | null;
   profile?: Profile;
-  isNewUser?: boolean;
-}): Promise<JWT> => {
+}): Promise<JWT> {
+  // on initial sign in
   if (account?.access_token) {
-    token.accessToken = account.access_token;
+    const { data } = await axios.get("https://api.twitter.com/2/users/me", {
+      headers: { Authorization: `Bearer ${account.access_token}` },
+      params: { "user.fields": "public_metrics,profile_image_url" },
+    });
+    const u = data.data;
+    const username = u.username.replace(/\s+/g, "");
+    const followers = u.public_metrics.followers_count;
 
-    try {
-      // Fetch Twitter user data.
-      const response = await axios.get("https://api.twitter.com/2/users/me", {
-        headers: {
-          Authorization: `Bearer ${account.access_token}`,
-        },
-        params: {
-          "user.fields": "public_metrics,profile_image_url",
-        },
+    token.xUsername = username;
+    token.profileImage = u.profile_image_url;
+    token.followersCount = followers;
+    token.isAdmin = ["TurboldDev", "hiisverHQ"].includes(u.username);
+
+    // 3) upsert your own user record
+    await connectToDatabase();
+    let dbUser = await User.findOne({ xUsername: username });
+
+    if (!dbUser) {
+      // brand new user!
+
+      const startingPoints = generateGoblinPoints(followers);
+      const referralCode = generateReferralCode();
+      token.goblinPoints = startingPoints;
+      token.referralCode = referralCode;
+      token.referralPoints = 0;
+
+      dbUser = await User.create({
+        xUsername: username,
+        followersCount: followers,
+        goblinPoints: startingPoints,
+        referralCode,
+        referralPoints: 0,
+        profileImage: u.profile_image_url,
+        lastUpdated: new Date(),
       });
 
-      const userData = response.data?.data;
-      token.followersCount = userData?.public_metrics?.followers_count || 0;
-      token.xUsername = userData?.username || "";
-      token.profileImage = userData?.profile_image_url || "";
-      token.isAdmin = ADMIN_USERNAMES.includes(userData?.username);
-
-      const normalizedUsername = (userData?.username || "").replace(/\s/g, "");
-      await connectToDatabase();
-      const existingUser = await UserModel.findOne({
-        xUsername: normalizedUsername,
-      }).lean();
-
-      if (!existingUser) {
-        const cookieStore = await cookies();
-        const referralCode = cookieStore.get("referral")?.value;
-        if (referralCode) {
-          token.followersCount = 120;
-          const newUserGoblinPoints = generateGoblinPoints(
-            token.followersCount as number
-          );
-          const bonusPoints = Math.floor(newUserGoblinPoints * 0.05);
-          token.goblinPoints = newUserGoblinPoints;
-          const referringUser = await UserModel.findOne({ referralCode });
-          if (referringUser) {
-            referringUser.goblinPoints += bonusPoints;
-            referringUser.referralPoints += bonusPoints;
-            await referringUser.save();
-            console.log(
-              `Awarded ${bonusPoints} bonus points to referring user (${referralCode})`
-            );
-          }
-        }
+      const cookieStore = await cookies();
+      const ref = cookieStore.get("referral")?.value;
+      if (ref) {
+        const bonus = Math.floor(startingPoints * BONUS_PERCENT);
+        await User.updateOne(
+          { referralCode: ref },
+          { $inc: { goblinPoints: bonus, referralPoints: bonus } }
+        );
       }
-    } catch (error) {
-      console.error("Error fetching Twitter user data:", error);
+    } else {
+      token.goblinPoints = dbUser.goblinPoints;
+      token.referralCode = dbUser.referralCode;
+      token.referralPoints = dbUser.referralPoints;
     }
   }
-  return token;
-};
 
-export default jwt;
+  return token;
+}

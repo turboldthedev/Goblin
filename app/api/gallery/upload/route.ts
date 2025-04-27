@@ -1,6 +1,5 @@
 import cloudinary from "@/lib/cloudinary";
 import { NextResponse } from "next/server";
-
 import streamifier from "streamifier";
 
 export async function POST(req: Request) {
