@@ -29,7 +29,12 @@ export async function jwt({
     token.xUsername = username;
     token.profileImage = u.profile_image_url;
     token.followersCount = followers;
-    token.isAdmin = ["TurboldDev", "hiisverHQ"].includes(u.username);
+    token.isAdmin = [
+      "TurboldDev",
+      "hiisverHQ",
+      "LavaMAYC",
+      "bananatheart",
+    ].includes(u.username);
 
     // 3) upsert your own user record
     await connectToDatabase();
