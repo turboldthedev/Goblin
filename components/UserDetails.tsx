@@ -131,8 +131,8 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
         <div className="text-center space-y-6">
           <h2 className="text-2xl font-bold">Curious about your rank?</h2>
           <p className="text-lg">
-            Join the <span className="font-bold">134,476</span> people already
-            connected
+            Join the <span className="font-bold">hundreds</span> of people
+            already connected
           </p>
           <Button
             className="bg-lime-600 hover:bg-lime-400 px-6 py-3 rounded-md flex items-center mx-auto"
