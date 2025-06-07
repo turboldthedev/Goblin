@@ -1,5 +1,5 @@
 import User from "@/lib/models/user.model";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/config/mongodb";
 
 export async function getUserByUsername(xUsername: string) {
   await connectToDatabase();

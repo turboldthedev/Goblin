@@ -1,7 +1,7 @@
 import type { JWT } from "next-auth/jwt";
 import type { Account, Profile } from "next-auth";
 import axios from "axios";
-import { connectToDatabase } from "./mongodb";
+import { connectToDatabase } from "../config/mongodb";
 import { cookies } from "next/headers";
 import { generateGoblinPoints, generateReferralCode } from "./utils";
 import User from "@/lib/models/user.model";

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
+import { connectToDatabase } from "@/lib/config/mongodb";
 import Gallery from "@/lib/models/gallery.model";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/authConfig";
+import { authOptions } from "@/lib/config/authConfig";
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions);

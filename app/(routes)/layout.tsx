@@ -8,7 +8,7 @@ export default async function RoutesLayout({
   return (
     <>
       <Navbar />
-      {children}
+      <main className="pt-16">{children}</main>
     </>
   );
 }

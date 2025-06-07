@@ -1,4 +1,4 @@
-import cloudinary from "@/lib/cloudinary";
+import cloudinary from "@/lib/config/cloudinary";
 import { NextResponse } from "next/server";
 import streamifier from "streamifier";
 

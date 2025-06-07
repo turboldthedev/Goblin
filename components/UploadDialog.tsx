@@ -52,7 +52,7 @@ export default function UploadDialog({
       const formData = new FormData();
       formData.append("file", file);
 
-      const uploadRes = await axios.post("/api/gallery/upload", formData);
+      const uploadRes = await axios.post("/api/upload", formData);
       const imageUrl = uploadRes.data.url;
 
       await axios.post("/api/gallery", { title, imageUrl });

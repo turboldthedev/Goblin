@@ -8,8 +8,8 @@ import { Award, Save, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import UserTable from "./UserTable";
-import Loader from "./Loader";
+import UserTable from "../UserTable";
+import Loader from "../Loader";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@/types";
 
@@ -113,7 +113,7 @@ export default function AdminDashboard() {
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold bg-gradient-to-r from-lime-300 to-lime-500 text-transparent bg-clip-text">
-              Admin Dashboard
+              User points
             </h1>
             <Badge
               variant="outline"

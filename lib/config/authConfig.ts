@@ -1,7 +1,7 @@
 // lib/authConfig.ts
 import { NextAuthOptions } from "next-auth";
 import TwitterProvider from "next-auth/providers/twitter";
-import { jwt } from "./jwt";
+import { jwt } from "../utils/jwt";
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },

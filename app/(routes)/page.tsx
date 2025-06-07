@@ -3,7 +3,7 @@ import axios from "axios";
 import GoblinCharacter from "@/components/GoblinCharacter";
 import UserDetails from "@/components/UserDetails";
 import Leaderboard from "@/components/Leaderboard";
-import { authOptions } from "@/lib/authConfig";
+import { authOptions } from "@/lib/config/authConfig";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
@@ -17,7 +17,7 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen  text-white overflow-hidden">
+    <div className="min-h-screen text-white overflow-hidden">
       {/* Animated background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black"></div>

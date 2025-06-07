@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeClientProvider } from "@/components/ui/theme-provider";
 import ReferralHandler from "@/components/ReferralHandler";
-import { authOptions } from "@/lib/authConfig";
+import { authOptions } from "@/lib/config/authConfig";
 
 export const metadata: Metadata = {
   title: "Goblin",
