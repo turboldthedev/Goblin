@@ -22,6 +22,7 @@ export interface PartialBoxDetails {
   name: string;
   imageUrl: string | null;
   normalPrize: number;
+  boxType: string;
   hasBox: boolean;
   isReady: boolean;
   opened: boolean;

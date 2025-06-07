@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  HomeIcon,
-  SettingsIcon,
-  UsersIcon,
-  BoxIcon,
-  ChevronLeftIcon,
-} from "lucide-react";
+import { HomeIcon, BoxIcon, ChevronLeftIcon } from "lucide-react";
 import { ScrollArea } from "../ui/scroll-area";
 import { useRouter } from "next/navigation";
 

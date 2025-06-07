@@ -34,7 +34,6 @@ export async function GET(
   let readyAt: string | null = null;
 
   if (session?.user?.xUsername) {
-    // Get user by xUsername
     const user = (await User.findOne({
       xUsername: session.user.xUsername,
     }).lean()) as { _id: string };
@@ -43,7 +42,6 @@ export async function GET(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // See if this user already has a UserBox record for this template
     const userBox = await UserBox.findOne({
       userId: user._id,
       templateId: box._id,
@@ -61,20 +59,20 @@ export async function GET(
     }
   }
 
-  // 4) Build the response, including hasBox + timestamps when applicable
   const boxDetails = {
     _id: box._id.toString(),
     name: box.name,
     imageUrl: box.imageUrl,
     normalPrize: box.normalPrize,
+    boxType: box.boxType,
     missionUrl: box.missionUrl,
     missionDesc: box.missionDesc,
     missionCompleted,
-    hasBox, // <— true if user has already started mining this box
-    isReady, // <— only valid if hasBox === true
-    opened, // <— only valid if hasBox is false
-    startTime, // <— ISO string, or null if hasBox is false
-    readyAt, // <— ISO string, or null if hasBox is false
+    hasBox, //
+    isReady,
+    opened,
+    startTime,
+    readyAt,
   };
 
   return NextResponse.json(boxDetails, { status: 200 });

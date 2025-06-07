@@ -60,8 +60,7 @@ export async function POST(
     let finalPrize = basePrize;
 
     if (userBox.promoValid) {
-      const bonus = Math.floor(basePrize * 2);
-      finalPrize = basePrize + bonus;
+      finalPrize = basePrize * 2;
     }
 
     // 9) Credit the user's points
@@ -75,7 +74,6 @@ export async function POST(
       throw new Error("Failed to update user points");
     }
 
-    // 10) Save the updated UserBox
     userBox.prizeAmount = finalPrize;
     await userBox.save();
 
@@ -83,6 +81,7 @@ export async function POST(
       {
         message: "Box opened! Prize credited.",
         prizeAmount: finalPrize,
+        prizeType: userBox.prizeType,
         newBalance: updatedUser.goblinPoints,
         promoApplied: userBox.promoValid,
       },

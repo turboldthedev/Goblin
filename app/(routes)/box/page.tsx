@@ -1,4 +1,4 @@
-import BoxList from "@/components/BoxList";
+import BoxList from "@/components/box-page/BoxList";
 import React from "react";
 
 function Page() {

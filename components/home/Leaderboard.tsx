@@ -1,12 +1,11 @@
-// components/Leaderboard.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { Search } from "lucide-react";
 import { motion } from "framer-motion";
-import { Card } from "./ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "./ui/avatar";
+import { Card } from "../ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 
 interface UserEntry {

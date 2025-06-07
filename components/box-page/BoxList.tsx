@@ -3,10 +3,9 @@ import useSWR from "swr";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Package, Lock, CheckCircle, Gift } from "lucide-react";
-
+import { Package } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { LoadingScreen } from "../Loading";
 
 type BoxSummary = {
   boxes: {
@@ -25,22 +24,7 @@ export default function BoxList() {
   const { data, error, isLoading } = useSWR<BoxSummary>("/api/box", fetcher);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-black text-white">
-        {/* Animated background */}
-        <div className="fixed inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-green-900/20 via-black to-black"></div>
-          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lime-500 to-transparent"></div>
-        </div>
-        <div className="relative z-10 flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <Package className="h-12 w-12 text-lime-400 mx-auto mb-4 animate-pulse" />
-            <p className="text-lime-300">Loading boxes…</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen name="Box" />;
   }
 
   if (error) {

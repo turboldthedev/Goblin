@@ -1,8 +1,8 @@
 import { getServerSession } from "next-auth";
 import axios from "axios";
-import GoblinCharacter from "@/components/GoblinCharacter";
-import UserDetails from "@/components/UserDetails";
-import Leaderboard from "@/components/Leaderboard";
+import GoblinCharacter from "@/components/home/GoblinCharacter";
+import UserDetails from "@/components/home/UserDetails";
+import Leaderboard from "@/components/home/Leaderboard";
 import { authOptions } from "@/lib/config/authConfig";
 
 export default async function Home() {

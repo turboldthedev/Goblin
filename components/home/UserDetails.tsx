@@ -7,7 +7,7 @@ import { Award } from "lucide-react";
 import { PiXLogoLight } from "react-icons/pi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import WalletConnect from "./WalletConnect";
+import WalletConnect from "../WalletConnect";
 import { UserResponse } from "@/types";
 
 interface LoginAreaProps {

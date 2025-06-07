@@ -1,16 +1,13 @@
-// Updated and Optimized Gallery Page with Loading
 "use client";
-
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import axios from "axios";
 import { motion } from "framer-motion";
-
-import UploadDialog from "./UploadDialog";
-import HeaderSection from "./HeaderSection";
-import SearchAndViewToggle from "./SearchAndViewToggle";
+import { LoadingScreen } from "../Loading";
 import GalleryGrid from "./GalleryGrid";
-import Loader from "./Loader";
+import SearchAndViewToggle from "./SearchAndViewToggle";
+import HeaderSection from "./HeaderSection";
+import UploadDialog from "./UploadDialog";
 
 export interface GalleryItem {
   _id: string;
@@ -61,6 +58,10 @@ export default function GalleryPage() {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  if (isLoading) {
+    return <LoadingScreen name="Gallery" />;
+  }
+
   return (
     <div className="min-h-screen bg-black text-white">
       <main className="relative z-10 container mx-auto px-4 py-8">
@@ -89,12 +90,7 @@ export default function GalleryPage() {
             setView={setView}
           />
 
-          {/* Loader */}
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <GalleryGrid items={filteredItems} view={view} />
-          )}
+          <GalleryGrid items={filteredItems} view={view} />
         </motion.div>
       </main>
     </div>

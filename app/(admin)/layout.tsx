@@ -1,4 +1,3 @@
-// app/admin/layout.tsx
 import React from "react";
 
 import { getServerSession } from "next-auth";

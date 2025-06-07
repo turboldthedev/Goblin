@@ -8,10 +8,10 @@ import { Award, Save, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import UserTable from "../UserTable";
-import Loader from "../Loader";
+import UserTable from "./UserTable";
 import { useToast } from "@/hooks/use-toast";
 import { User } from "@/types";
+import { LoadingScreen } from "../Loading";
 
 const PAGE_SIZE = 20;
 
@@ -138,7 +138,7 @@ export default function AdminDashboard() {
 
           {/* Loader / Empty / Table + Pagination + Save */}
           {isLoading ? (
-            <Loader />
+            <LoadingScreen name="User points" />
           ) : data.total === 0 ? (
             <div className="py-16 text-center text-lime-300">
               <p className="text-xl font-semibold">No users found.</p>

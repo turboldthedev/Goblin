@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Clock, CheckIcon } from "lucide-react";
+import { CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { PartialBoxDetails } from "@/types";
@@ -45,7 +45,7 @@ export function BoxImageAction({
             className="relative z-10"
           >
             <Image
-              src={imageUrl ?? "/placeholder.svg?height=400&width=400"}
+              src={imageUrl ?? ""}
               alt={name}
               width={400}
               height={400}
