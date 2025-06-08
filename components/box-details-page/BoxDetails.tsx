@@ -90,12 +90,32 @@ export default function BoxDetailsPage() {
       const now = Date.now();
       const readyTime = new Date(boxDetails.readyAt!).getTime();
       const diff = readyTime - now;
+
+      if (diff <= 0) {
+        // Box is ready - update box details
+        fetchBoxDetails();
+        setTimeLeft("");
+        return;
+      }
+
       setTimeLeft(formatTime(diff));
     };
+
+    const fetchBoxDetails = async () => {
+      try {
+        const { data } = await axios.get<PartialBoxDetails>(
+          `/api/box/${params.id}`
+        );
+        setBoxDetails(data);
+      } catch (err) {
+        console.error("Failed to refresh box details:", err);
+      }
+    };
+
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [boxDetails]);
+  }, [boxDetails, params.id]);
 
   // --- Start mining handler ---
   const handleStartMining = async () => {
@@ -114,7 +134,21 @@ export default function BoxDetailsPage() {
         `/api/box/${params.id}`
       );
       setBoxDetails(data);
-    } catch {
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        const serverError = (err.response.data as { error?: string }).error;
+        toast({
+          variant: "destructive",
+          title: "Mining Error",
+          description: serverError ?? "Could not start mining",
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Network error",
+          description: "Please check your connection and try again.",
+        });
+      }
       setError("Could not start mining");
     } finally {
       setIsLoading(false);

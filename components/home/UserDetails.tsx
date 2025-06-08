@@ -103,7 +103,8 @@ const UserDetails: FC<LoginAreaProps> = ({ userRank }) => {
                   variant="outline"
                   className="border-lime-500/50 bg-lime-500/10 text-lime-300"
                 >
-                  {userRank?.user?.goblinPoints || 0} Total Goblin Points
+                  {userRank?.user?.goblinPoints.toLocaleString() || 0} Total
+                  Goblin Points
                 </Badge>
               </div>
               <div className="flex items-center gap-2 mt-1 text-lime-400">

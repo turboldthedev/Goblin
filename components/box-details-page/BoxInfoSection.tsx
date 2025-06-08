@@ -25,19 +25,8 @@ export function BoxInfoSection() {
             WHAT IS PRIZE?
           </h3>
           <p className="text-lime-100/80 leading-relaxed mb-3">
-            Each box contains a random combination of:
+            {BOX_STATIC_INFO.prizes}
           </p>
-          <div className="flex flex-wrap gap-2">
-            {BOX_STATIC_INFO.prizes.map((prize, idx) => (
-              <Badge
-                key={idx}
-                variant="outline"
-                className="border-lime-500/30 bg-lime-500/10 text-lime-300"
-              >
-                {prize}
-              </Badge>
-            ))}
-          </div>
         </div>
 
         <div>

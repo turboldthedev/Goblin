@@ -38,5 +38,5 @@ const BoxTemplateSchema: Schema<IBoxTemplate> = new Schema(
 );
 
 export const BoxTemplate: Model<IBoxTemplate> =
-  mongoose.models.BoxTemplate ||
+  mongoose.models.Box || // ✅ guard against existing "Box"
   mongoose.model<IBoxTemplate>("Box", BoxTemplateSchema);

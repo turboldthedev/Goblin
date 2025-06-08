@@ -51,7 +51,7 @@ export async function POST(
 
   // 5) Compute readyAt = now + 24h
   const now = new Date();
-  const readyAt = new Date(now.getTime() + 1 * 1000); // 1 minute = 60 seconds * 1000ms
+  const readyAt = new Date(now.getTime() + 10 * 1000); // 1 minute = 60 seconds * 1000ms
 
   // 6) Create a UserBox entry
   const userBox = new UserBox({
