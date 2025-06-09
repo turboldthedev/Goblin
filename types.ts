@@ -16,3 +16,19 @@ export interface UserResponse {
   user: User;
   rank: number;
 }
+
+export interface PartialBoxDetails {
+  _id: string;
+  name: string;
+  imageUrl: string | null;
+  normalPrize: number;
+  boxType: string;
+  hasBox: boolean;
+  isReady: boolean;
+  opened: boolean;
+  startTime: string;
+  readyAt: string;
+  missionUrl: string;
+  missionDesc: string;
+  missionCompleted: boolean;
+}

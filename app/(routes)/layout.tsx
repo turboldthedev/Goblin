@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/layout/Navbar";
 import "../globals.css";
 export default async function RoutesLayout({
   children,
@@ -8,7 +8,7 @@ export default async function RoutesLayout({
   return (
     <>
       <Navbar />
-      {children}
+      <main className="pt-16">{children}</main>
     </>
   );
 }
