@@ -40,6 +40,13 @@ export default function BoxDetailsPage() {
     type: "Goblin Points",
     isGolden: false,
   });
+  const [visitedUrls, setVisitedUrls] = useState<string[]>([]);
+  const missionUrls = boxDetails?.missionUrl
+    ? boxDetails.missionUrl
+        .split(",")
+        .map((u) => u.trim())
+        .filter(Boolean)
+    : [];
 
   // Format milliseconds → HH:MM:SS
   const formatTime = (ms: number) => {
@@ -156,30 +163,25 @@ export default function BoxDetailsPage() {
   };
 
   // --- Complete mission & open URL ---
-  const handleMissionClick = async () => {
-    if (!boxDetails) return;
-
+  // replace your old handleMissionClick with:
+  const handleMissionClick = async (url: string) => {
     try {
-      await axios.post(`/api/box/${params.id}/mission`);
-      setBoxDetails((prev) =>
-        prev ? { ...prev, missionCompleted: true } : prev
-      );
-      window.open(boxDetails.missionUrl, "_blank");
+      await axios.post(`/api/box/${params.id}/mission`, { url });
+      setVisitedUrls((v) => {
+        const next = v.includes(url) ? v : [...v, url];
+        // once all have been clicked, mark missionCompleted locally
+        if (next.length === missionUrls.length && boxDetails) {
+          setBoxDetails({ ...boxDetails, missionCompleted: true });
+        }
+        return next;
+      });
+      window.open(url, "_blank");
     } catch (err: any) {
-      if (axios.isAxiosError(err) && err.response) {
-        const serverError = (err.response.data as { error?: string }).error;
-        toast({
-          variant: "destructive",
-          title: "Mission Error",
-          description: serverError ?? "Could not complete mission.",
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Network error",
-          description: "Please check your connection and try again.",
-        });
-      }
+      toast({
+        variant: "destructive",
+        title: "Mission Error",
+        description: err.response?.data?.error || "Could not complete mission",
+      });
     }
   };
 
@@ -298,11 +300,11 @@ export default function BoxDetailsPage() {
                 details={boxDetails!}
                 isLoading={isLoading}
                 timeLeft={timeLeft}
+                visitedUrls={visitedUrls} // ← new
                 onStartMining={handleStartMining}
-                onMissionClick={handleMissionClick}
+                onMissionClick={handleMissionClick} // now takes the URL
                 onOpenBox={handleOpenBox}
               />
-
               {/* Promo Code Section */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}

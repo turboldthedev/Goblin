@@ -14,7 +14,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { toast } from "@/hooks/use-toast";
+import { X } from "lucide-react";
 
 import { BoxTemplate } from "./BoxCard";
 
@@ -39,9 +42,14 @@ export function EditBoxDrawer({
     goldenChance: 0,
     active: false,
     imageUrl: "",
+    missionUrl: "",
+    missionDesc: "",
+    boxType: "normal" as "normal" | "partner",
+    promoCode: "",
   });
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [missionUrls, setMissionUrls] = useState<string[]>([""]);
 
   // Whenever `template` or drawer re‐opens, re‐populate form state
   useEffect(() => {
@@ -53,14 +61,25 @@ export function EditBoxDrawer({
         goldenChance: template.goldenChance,
         active: template.active,
         imageUrl: template.imageUrl || "",
+        missionUrl: template.missionUrl || "",
+        missionDesc: template.missionDesc || "",
+        boxType: template.boxType || "normal",
+        promoCode: template.promoCode || "",
       });
       setFile(null);
+
+      // Initialize mission URLs
+      if (template.missionUrl) {
+        setMissionUrls(template.missionUrl.split(","));
+      } else {
+        setMissionUrls([""]);
+      }
     }
   }, [template, isOpen]);
 
   // Handle simple inputs + checkbox
   const onChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value, type } = e.target;
     const checked =
@@ -71,9 +90,21 @@ export function EditBoxDrawer({
       [name]:
         type === "checkbox"
           ? checked
-          : name === "name" || name === "imageUrl"
+          : name === "name" ||
+              name === "imageUrl" ||
+              name === "missionUrl" ||
+              name === "missionDesc" ||
+              name === "promoCode"
             ? value
             : Number(value),
+    }));
+  };
+
+  // Handle box type change
+  const onBoxTypeChange = (value: "normal" | "partner") => {
+    setForm((prev) => ({
+      ...prev,
+      boxType: value,
     }));
   };
 
@@ -82,6 +113,44 @@ export function EditBoxDrawer({
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
+  };
+
+  // Handle individual URL input changes
+  const handleUrlChange = (index: number, value: string) => {
+    const newUrls = [...missionUrls];
+    newUrls[index] = value;
+    setMissionUrls(newUrls);
+
+    // Update the form's missionUrl with comma-separated string
+    const urlString = newUrls.filter((url) => url.trim() !== "").join(",");
+    const e = {
+      target: {
+        name: "missionUrl",
+        value: urlString,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(e);
+  };
+
+  // Add new URL input field
+  const addUrlField = () => {
+    setMissionUrls([...missionUrls, ""]);
+  };
+
+  // Remove URL input field
+  const removeUrlField = (index: number) => {
+    const newUrls = missionUrls.filter((_, i) => i !== index);
+    setMissionUrls(newUrls);
+
+    // Update form after removal
+    const urlString = newUrls.filter((url) => url.trim() !== "").join(",");
+    const e = {
+      target: {
+        name: "missionUrl",
+        value: urlString,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(e);
   };
 
   // If a new file is selected, upload to Cloudinary (same as create)
@@ -120,6 +189,10 @@ export function EditBoxDrawer({
         goldenChance: form.goldenChance,
         active: form.active,
         imageUrl: newImageUrl,
+        missionUrl: form.missionUrl,
+        missionDesc: form.missionDesc,
+        boxType: form.boxType,
+        promoCode: form.promoCode,
       };
 
       const res = await fetch(`/api/admin/box/${template._id}`, {
@@ -156,16 +229,65 @@ export function EditBoxDrawer({
 
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
-      {/* We don’t actually need a separate <SheetTrigger> here because BoxCard calls onOpenChange(true) */}
-      <SheetContent className="bg-black/90 border-lime-500/30 text-white w-[400px] sm:w-[540px]">
+      {/* We don't actually need a separate <SheetTrigger> here because BoxCard calls onOpenChange(true) */}
+      <SheetContent className="bg-black/90 border-lime-500/30 text-white w-[400px] sm:w-[540px] overflow-y-auto">
         <SheetHeader>
           <SheetTitle className="text-lime-300">Edit Box Template</SheetTitle>
           <SheetDescription className="text-lime-300/70">
-            Update name, prizes, chance, status, or image for this box.
+            Update name, prizes, chance, status, image, mission requirements,
+            and box type for this box.
           </SheetDescription>
         </SheetHeader>
 
         <form onSubmit={onSubmit} className="space-y-6 mt-6">
+          {/* ──────────────── Box Type Selector ──────────────── */}
+          <div className="space-y-2">
+            <Label className="text-lime-300">Box Type</Label>
+            <RadioGroup
+              value={form.boxType}
+              onValueChange={(v) => onBoxTypeChange(v as "normal" | "partner")}
+              className="flex space-x-4"
+            >
+              <div className="flex items-center space-x-1">
+                <RadioGroupItem value="normal" id="type-normal" />
+                <Label
+                  htmlFor="type-normal"
+                  className="text-lime-300 cursor-pointer"
+                >
+                  Normal
+                </Label>
+              </div>
+              <div className="flex items-center space-x-1">
+                <RadioGroupItem value="partner" id="type-partner" />
+                <Label
+                  htmlFor="type-partner"
+                  className="text-lime-300 cursor-pointer"
+                >
+                  Partner
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+
+          {/* ──────────────── If Partner, show Promo Code ──────────────── */}
+          {form.boxType === "partner" && (
+            <div className="space-y-2">
+              <Label htmlFor="promoCode" className="text-lime-300">
+                Promo Code
+              </Label>
+              <Input
+                id="promoCode"
+                name="promoCode"
+                type="text"
+                value={form.promoCode}
+                onChange={onChange}
+                placeholder="e.g. SUMMER2025"
+                className="bg-black/60 border-lime-500/20 focus:border-lime-500/50 text-lime-100"
+                required={form.boxType === "partner"}
+              />
+            </div>
+          )}
+
           {/* NAME */}
           <div className="space-y-2">
             <Label htmlFor="name" className="text-lime-300">
@@ -263,6 +385,56 @@ export function EditBoxDrawer({
                 className="mt-2 h-20 w-auto object-contain rounded-lg border border-lime-500/30"
               />
             ) : null}
+          </div>
+
+          {/* ──────────────── Mission URLs ──────────────── */}
+          <div className="space-y-2">
+            <Label className="text-lime-300">Mission URLs</Label>
+            {missionUrls.map((url, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <Input
+                  type="url"
+                  value={url}
+                  onChange={(e) => handleUrlChange(index, e.target.value)}
+                  placeholder="https://twitter.com/..."
+                  className="bg-black/60 border-lime-500/20 focus:border-lime-500/50 text-lime-100"
+                />
+                {missionUrls.length > 1 && (
+                  <Button
+                    type="button"
+                    onClick={() => removeUrlField(index)}
+                    variant="outline"
+                    className="border-lime-500/20 hover:bg-lime-500/10"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              onClick={addUrlField}
+              variant="outline"
+              className="w-full border-lime-500/20 hover:bg-lime-500/10 text-lime-300"
+            >
+              Add Another URL
+            </Button>
+          </div>
+
+          {/* ───────── Mission Description ───────── */}
+          <div className="space-y-2">
+            <Label htmlFor="missionDesc" className="text-lime-300">
+              Mission Description
+            </Label>
+            <Textarea
+              id="missionDesc"
+              name="missionDesc"
+              value={form.missionDesc}
+              onChange={onChange}
+              required
+              placeholder="Ask users to comment on our latest tweet"
+              className="bg-black/60 border-lime-500/20 focus:border-lime-500/50 text-lime-100"
+            />
           </div>
 
           {/* ACTIVE TOGGLE */}

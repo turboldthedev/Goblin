@@ -13,11 +13,14 @@ export type BoxTemplate = {
   _id: string;
   name: string;
   imageUrl?: string;
-  // (the other fields no longer appear here because they live in the drawer)
   normalPrize: number;
   goldenPrize: number;
   goldenChance: number;
   active: boolean;
+  missionUrl: string;
+  missionDesc: string;
+  boxType: "normal" | "partner";
+  promoCode?: string;
   createdAt: string;
   updatedAt: string;
 };
