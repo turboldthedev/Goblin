@@ -49,9 +49,9 @@ export async function POST(
     prizeAmount = template.goldenPrize;
   }
 
-  // 5) Compute readyAt = now + 24h
   const now = new Date();
   const readyAt = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  // const readyAt = new Date(now.getTime() + 1000);
 
   // 6) Create a UserBox entry
   const userBox = new UserBox({

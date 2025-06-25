@@ -11,7 +11,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -58,6 +58,53 @@ export function CreateBoxTemplateSheet({
   onBoxTypeChange,
   onSubmit,
 }: CreateBoxTemplateSheetProps) {
+  const [missionUrls, setMissionUrls] = React.useState<string[]>([""]);
+
+  // Handle individual URL input changes
+  const handleUrlChange = (index: number, value: string) => {
+    const newUrls = [...missionUrls];
+    newUrls[index] = value;
+    setMissionUrls(newUrls);
+
+    // Update the form's missionUrl with comma-separated string
+    const urlString = newUrls.filter((url) => url.trim() !== "").join(",");
+    const e = {
+      target: {
+        name: "missionUrl",
+        value: urlString,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(e);
+  };
+
+  // Add new URL input field
+  const addUrlField = () => {
+    setMissionUrls([...missionUrls, ""]);
+  };
+
+  // Remove URL input field
+  const removeUrlField = (index: number) => {
+    const newUrls = missionUrls.filter((_, i) => i !== index);
+    setMissionUrls(newUrls);
+
+    // Update form after removal
+    const urlString = newUrls.filter((url) => url.trim() !== "").join(",");
+    const e = {
+      target: {
+        name: "missionUrl",
+        value: urlString,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+    onChange(e);
+  };
+
+  // Initialize missionUrls from form value on mount
+  React.useEffect(() => {
+    if (form.missionUrl) {
+      setMissionUrls(form.missionUrl.split(","));
+    }
+  }, []);
+
   return (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
       <SheetTrigger asChild>
@@ -71,7 +118,7 @@ export function CreateBoxTemplateSheet({
           <SheetTitle className="text-lime-300">Create New Box</SheetTitle>
           <SheetDescription className="text-lime-300/70">
             Configure a new prize box template with normal/golden rewards, an
-            optional image, mission requirements, and choose “partner” if you
+            optional image, mission requirements, and choose "partner" if you
             want to assign a promo code.
           </SheetDescription>
         </SheetHeader>
@@ -227,21 +274,38 @@ export function CreateBoxTemplateSheet({
             )}
           </div>
 
-          {/* ──────────────── Mission URL ──────────────── */}
+          {/* ──────────────── Mission URLs ──────────────── */}
           <div className="space-y-2">
-            <Label htmlFor="missionUrl" className="text-lime-300">
-              Mission URL
-            </Label>
-            <Input
-              id="missionUrl"
-              name="missionUrl"
-              type="url"
-              value={form.missionUrl}
-              onChange={onChange}
-              required
-              placeholder="https://twitter.com/..."
-              className="bg-black/60 border-lime-500/20 focus:border-lime-500/50 text-lime-100"
-            />
+            <Label className="text-lime-300">Mission URLs</Label>
+            {missionUrls.map((url, index) => (
+              <div key={index} className="flex gap-2 mb-2">
+                <Input
+                  type="url"
+                  value={url}
+                  onChange={(e) => handleUrlChange(index, e.target.value)}
+                  placeholder="https://twitter.com/..."
+                  className="bg-black/60 border-lime-500/20 focus:border-lime-500/50 text-lime-100"
+                />
+                {missionUrls.length > 1 && (
+                  <Button
+                    type="button"
+                    onClick={() => removeUrlField(index)}
+                    variant="outline"
+                    className="border-lime-500/20 hover:bg-lime-500/10"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            <Button
+              type="button"
+              onClick={addUrlField}
+              variant="outline"
+              className="w-full border-lime-500/20 hover:bg-lime-500/10 text-lime-300"
+            >
+              Add Another URL
+            </Button>
           </div>
 
           {/* ───────── Mission Description ───────── */}
