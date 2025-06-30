@@ -163,7 +163,7 @@ export default function BoxDetailsPage() {
   };
 
   // --- Complete mission & open URL ---
-  // replace your old handleMissionClick with:
+
   const handleMissionClick = async (url: string) => {
     try {
       await axios.post(`/api/box/${params.id}/mission`, { url });
