@@ -18,4 +18,9 @@ const UserSchema = new Schema<IUser>({
   referralPoints: { type: Number, default: 0 },
 });
 
+UserSchema.index({ goblinPoints: -1 });
+
+// And for your search box
+UserSchema.index({ xUsername: "text" });
+
 export default models.User || model<IUser>("User", UserSchema);

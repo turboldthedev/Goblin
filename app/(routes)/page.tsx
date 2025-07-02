@@ -28,9 +28,8 @@ export default async function Home() {
       {/* Main Content */}
       <main className="relative z-10 container mx-auto px-4 py-8 md:py-16">
         <div className="grid md:grid-cols-2 gap-8 md:gap-16 items-center">
-          {/* Left Column - Goblin Character */}
           <GoblinCharacter userRankData={userRankData} />
-          {/* Right Column - User Info */}
+
           <UserDetails userRank={userRankData} />
         </div>
 
