@@ -7,44 +7,48 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> }
 ) {
   try {
+    // 1) Connect once
     await connectToDatabase();
 
+    // 2) Extract & validate
     const { username } = await params;
-
     if (!username) {
       return NextResponse.json(
-        { message: "Username is required" },
+        { error: "Username is required" },
         { status: 400 }
       );
     }
 
+    // 3) Fetch only that user
     const user = (await User.findOne({ xUsername: username })
+      .select("xUsername goblinPoints profileImage referralCode") // only pull what you need
       .lean()
-      .exec()) as IUser | null;
+      .exec()) as Pick<
+      IUser,
+      "xUsername" | "goblinPoints" | "profileImage" | "referralCode"
+    > | null;
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const users = await User.find().sort({ goblinPoints: -1 }).lean().exec();
-    const userIndex = users.findIndex(
-      (u) => String(u._id) === String(user._id)
-    );
-
-    if (userIndex === -1) {
-      return NextResponse.json(
-        { error: "User found but not ranked" },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({
-      user,
-      rank: userIndex + 1,
-      goblinPoints: user.goblinPoints,
+    // 4) Count how many have strictly more points
+    const higherCount = await User.countDocuments({
+      goblinPoints: { $gt: user.goblinPoints },
     });
-  } catch (error: any) {
-    console.error("Error fetching user rank data:", error.message || error);
+
+    // 5) Respond with rank + minimal user info
+    return NextResponse.json({
+      user: {
+        xUsername: user.xUsername,
+        goblinPoints: user.goblinPoints,
+        profileImage: user.profileImage,
+        referralCode: user.referralCode,
+      },
+      rank: higherCount + 1,
+    });
+  } catch (err: any) {
+    console.error("Error fetching user rank data:", err);
     return NextResponse.json(
       { error: "Failed to fetch user rank data" },
       { status: 500 }

@@ -55,7 +55,6 @@ const Leaderboard: React.FC = () => {
     }
   };
 
-  // whenever page or committed searchTerm changes, re-fetch
   useEffect(() => {
     fetchPage(page, searchTerm);
   }, [page, searchTerm]);
