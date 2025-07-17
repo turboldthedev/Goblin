@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Card } from "../ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
+import api from "@/lib/utils/axiosClient";
 
 interface UserEntry {
   _id: string;
@@ -41,13 +42,11 @@ const Leaderboard: React.FC = () => {
   const fetchPage = async (p: number, q: string) => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/users?page=${p}&limit=${PAGE_SIZE}&search=${encodeURIComponent(
-          q
-        )}`
+      const res = await api.get(
+        `/users?page=${p}&limit=${PAGE_SIZE}&search=${encodeURIComponent(q)}`
       );
-      const json = (await res.json()) as PaginatedResponse;
-      setData(json);
+
+      setData(res.data as PaginatedResponse);
     } catch (err) {
       console.error("Failed to load page", err);
     } finally {

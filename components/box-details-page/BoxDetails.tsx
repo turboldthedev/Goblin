@@ -15,6 +15,8 @@ import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import PromoCodeBox from "./PromoCodeBox";
 import { LoadingScreen } from "../Loading";
+import { fetchBoxDetails } from "@/lib/utils/server-utils";
+import api from "@/lib/utils/axiosClient";
 
 export default function BoxDetailsPage() {
   const params = useParams();
@@ -22,10 +24,6 @@ export default function BoxDetailsPage() {
   const [boxDetails, setBoxDetails] = useState<PartialBoxDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [promoCode, setPromoCode] = useState("");
-  const [promoStatus, setPromoStatus] = useState<
-    "idle" | "valid" | "invalid" | "checking"
-  >("idle");
   const [promoMessage, setPromoMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState<string>("");
   const { data: session } = useSession();
@@ -70,9 +68,8 @@ export default function BoxDetailsPage() {
       setIsLoading(true);
       setError(null);
       try {
-        const { data } = await axios.get<PartialBoxDetails>(
-          `/api/box/${params.id}`
-        );
+        const data = await fetchBoxDetails(params.id as string);
+        console.log("data", data);
         setBoxDetails(data);
       } catch (err) {
         if (axios.isAxiosError(err) && err.response?.status === 404) {
@@ -100,7 +97,7 @@ export default function BoxDetailsPage() {
 
       if (diff <= 0) {
         // Box is ready - update box details
-        fetchBoxDetails();
+        fetchBoxDetailsLocal();
         setTimeLeft("");
         return;
       }
@@ -108,11 +105,9 @@ export default function BoxDetailsPage() {
       setTimeLeft(formatTime(diff));
     };
 
-    const fetchBoxDetails = async () => {
+    const fetchBoxDetailsLocal = async () => {
       try {
-        const { data } = await axios.get<PartialBoxDetails>(
-          `/api/box/${params.id}`
-        );
+        const data = await fetchBoxDetails(params.id as string);
         setBoxDetails(data);
       } catch (err) {
         console.error("Failed to refresh box details:", err);
@@ -136,10 +131,8 @@ export default function BoxDetailsPage() {
     }
     setIsLoading(true);
     try {
-      await axios.post(`/api/box/${params.id}/start`);
-      const { data } = await axios.get<PartialBoxDetails>(
-        `/api/box/${params.id}`
-      );
+      await api.post(`/box/${params.id}/start`, {});
+      const data = await fetchBoxDetails(params.id as string);
       setBoxDetails(data);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
@@ -166,7 +159,7 @@ export default function BoxDetailsPage() {
 
   const handleMissionClick = async (url: string) => {
     try {
-      await axios.post(`/api/box/${params.id}/mission`, { url });
+      await api.post(`/box/${params.id}/mission`, { url });
       setVisitedUrls((v) => {
         const next = v.includes(url) ? v : [...v, url];
         // once all have been clicked, mark missionCompleted locally
@@ -190,12 +183,12 @@ export default function BoxDetailsPage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post<{
+      const response = await api.post<{
         message: string;
         prizeAmount: number;
         newBalance: number;
         prizeType: string;
-      }>(`/api/box/${params.id}/claim`);
+      }>(`/box/${params.id}/claim`, {});
 
       const { prizeAmount, prizeType } = response.data;
 
@@ -208,9 +201,7 @@ export default function BoxDetailsPage() {
       });
       setRewardModalOpen(true);
 
-      const { data } = await axios.get<PartialBoxDetails>(
-        `/api/box/${params.id}`
-      );
+      const data = await fetchBoxDetails(params.id as string);
       setBoxDetails(data);
     } catch (err: any) {
       if (axios.isAxiosError(err) && err.response) {
@@ -231,31 +222,6 @@ export default function BoxDetailsPage() {
       setIsLoading(false);
     }
   };
-
-  async function handlePromoCodeSubmit() {
-    if (!promoCode.trim()) {
-      setPromoStatus("invalid");
-      setPromoMessage("Please enter a promo code");
-      return;
-    }
-
-    setPromoStatus("checking");
-    try {
-      await axios.post(`/api/box/${params.id}/promo`, { code: promoCode });
-      // If successful:
-      setPromoStatus("valid");
-      setPromoMessage("Promo code applied!");
-
-      setBoxDetails((prev) => (prev ? { ...prev, promoValid: true } : prev));
-    } catch (err: any) {
-      setPromoStatus("invalid");
-      setPromoMessage(
-        axios.isAxiosError(err) && err.response?.data?.error
-          ? err.response.data.error
-          : "Invalid promo code"
-      );
-    }
-  }
 
   const { name = "" } = boxDetails ?? {};
 

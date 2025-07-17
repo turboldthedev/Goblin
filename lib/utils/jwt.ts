@@ -70,8 +70,8 @@ export async function jwt({
       }
     } else {
       token.goblinPoints = dbUser.goblinPoints;
-      token.referralCode = dbUser.referralCode;
-      token.referralPoints = dbUser.referralPoints;
+      token.referralCode = dbUser.referralCode || "";
+      token.referralPoints = dbUser.referralPoints || 0;
     }
   }
 

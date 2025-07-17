@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Sparkles, Zap } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function LoadingScreen({ name }: { name: string }) {
   return (
@@ -18,8 +19,12 @@ export function LoadingScreen({ name }: { name: string }) {
             key={i}
             className="absolute w-1 h-1 bg-lime-400/30 rounded-full"
             initial={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerWidth : 1920),
+              y:
+                Math.random() *
+                (typeof window !== "undefined" ? window.innerHeight : 1080),
               opacity: 0,
             }}
             animate={{
@@ -135,12 +140,7 @@ export function LoadingScreen({ name }: { name: string }) {
 
 // Typewriter effect component
 function LoadingText() {
-  const messages = [
-    "Scanning blockchain...",
-    "Verifying ownership...",
-    "Loading box details...",
-    "Almost ready...",
-  ];
+  const messages = ["Loading...", "Verifying ownership...", "Almost there..."];
 
   const [currentMessage, setCurrentMessage] = useState(0);
   const [displayText, setDisplayText] = useState("");
@@ -184,15 +184,4 @@ function LoadingText() {
       />
     </span>
   );
-}
-
-function useState<T>(
-  initialValue: T
-): [T, (value: T | ((prev: T) => T)) => void] {
-  // This is a placeholder - in real React, this would be the actual useState hook
-  return [initialValue, () => {}] as any;
-}
-
-function useEffect(effect: () => void | (() => void), deps?: any[]): void {
-  // This is a placeholder - in real React, this would be the actual useEffect hook
 }

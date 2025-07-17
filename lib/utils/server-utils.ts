@@ -1,12 +1,9 @@
-import User from "@/lib/models/user.model";
-import { connectToDatabase } from "@/lib/config/mongodb";
+import { PartialBoxDetails } from "@/types";
+import api from "./axiosClient";
 
-export async function getUserByUsername(xUsername: string) {
-  await connectToDatabase();
-  return await User.findOne({ xUsername }).lean();
-}
-
-export async function getAllUsers() {
-  await connectToDatabase();
-  return await User.find().sort({ goblinPoints: -1 }).lean();
-}
+export const fetchBoxDetails = async (
+  boxId: string
+): Promise<PartialBoxDetails> => {
+  const { data } = await api.get<PartialBoxDetails>(`/box/${boxId}`);
+  return data;
+};

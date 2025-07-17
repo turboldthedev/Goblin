@@ -4,16 +4,20 @@ import GoblinCharacter from "@/components/home/GoblinCharacter";
 import UserDetails from "@/components/home/UserDetails";
 import Leaderboard from "@/components/home/Leaderboard";
 import { authOptions } from "@/lib/config/authConfig";
+import apiServer from "@/lib/utils/axiosServer";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
 
   let userRankData;
   if (session) {
-    const userRes = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/users/${session?.user.xUsername}`
-    );
-    userRankData = userRes.data;
+    try {
+      const userRes = await apiServer.get(`/users/${session?.user.xUsername}`);
+      userRankData = userRes.data;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      userRankData = null;
+    }
   }
 
   return (

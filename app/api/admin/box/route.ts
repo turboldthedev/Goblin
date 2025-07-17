@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/config/mongodb";
 import { BoxTemplate } from "@/lib/models/box.model";
-import { requireAuth } from "../../box/[id]/start/utils";
+import { requireAuth } from "../utils";
 
 export async function GET(req: NextRequest) {
   const user = await requireAuth();

@@ -21,7 +21,10 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function BoxList() {
   // Fetch a list of all boxes (box summaries) from your API
-  const { data, error, isLoading } = useSWR<BoxSummary>("/api/box", fetcher);
+  const { data, error, isLoading } = useSWR<BoxSummary>(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/boxes`,
+    fetcher
+  );
 
   if (isLoading) {
     return <LoadingScreen name="Box" />;

@@ -1,10 +1,49 @@
 // lib/authConfig.ts
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
+import type { JWT } from "next-auth/jwt";
 import TwitterProvider from "next-auth/providers/twitter";
-import { jwt } from "../utils/jwt";
+import { SignJWT, jwtVerify } from "jose";
+import { jwt as upsertJwtToken } from "../utils/jwt";
+
+const ALGORITHM = "HS256";
 
 export const authOptions: NextAuthOptions = {
-  session: { strategy: "jwt" },
+  // used for both signing and (optional) encryption
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+
+  // Override NextAuth’s default encrypted JWE behavior
+  jwt: {
+    // create a plain HS256‐signed token
+    async encode({ token, secret, maxAge }): Promise<string> {
+      const now = Math.floor(Date.now() / 1000);
+      const claims = {
+        iat: now,
+        exp: now + (maxAge as number),
+        ...token,
+      };
+      return new SignJWT(claims)
+        .setProtectedHeader({ alg: ALGORITHM })
+        .sign(new TextEncoder().encode(secret as string));
+    },
+    // verify & decode that HS256‐signed token
+    async decode({ token, secret }): Promise<JWT | null> {
+      try {
+        const { payload } = await jwtVerify(
+          token!,
+          new TextEncoder().encode(secret as string),
+          { algorithms: [ALGORITHM] }
+        );
+        return payload as JWT;
+      } catch {
+        return null;
+      }
+    },
+  },
+
   providers: [
     TwitterProvider({
       clientId: process.env.TWITTER_CLIENT_ID!,
@@ -13,8 +52,22 @@ export const authOptions: NextAuthOptions = {
       authorization: { params: { prompt: "login" } },
     }),
   ],
+
   callbacks: {
-    jwt,
+    // runs on every JWT create/update
+    async jwt({ token, account, profile }) {
+      // -- your existing upsert / profile logic --
+      token = await upsertJwtToken({ token, account, profile });
+
+      // carry forward the OAuth access_token
+      if (account?.access_token) {
+        token.accessToken = account.access_token;
+      }
+
+      return token;
+    },
+
+    // make token data available in `session`
     async session({ session, token }) {
       session.user = session.user || {};
       session.accessToken = token.accessToken as string;
@@ -28,6 +81,18 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-
-  // no adapter here
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: false,
+        sameSite: "lax",
+        path: "/",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? ".goblinbox.com"
+            : "localhost",
+      },
+    },
+  },
 };

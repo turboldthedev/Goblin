@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Types } from "mongoose";
 import { connectToDatabase } from "@/lib/config/mongodb";
 import { BoxTemplate } from "@/lib/models/box.model";
-import { requireAuth } from "../../../box/[id]/start/utils";
+import { requireAuth } from "../../utils";
 
 export async function PUT(
   req: NextRequest,

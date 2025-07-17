@@ -11,6 +11,7 @@ interface GoblinCharacterProps {
 }
 const GoblinCharacter: FC<GoblinCharacterProps> = ({ userRankData }) => {
   const { data: session, status } = useSession();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

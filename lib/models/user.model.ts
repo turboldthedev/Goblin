@@ -1,11 +1,11 @@
-import mongoose, { Schema, Document, model, models } from "mongoose";
+import mongoose, { Schema, Document, model, models, Model } from "mongoose";
 
 export interface IUser extends Document {
   xUsername: string;
   followersCount: number;
   goblinPoints: number;
   profileImage?: string;
-  referralCode?: string; // New field for referral code
+  referralCode?: string;
   referralPoints?: number;
 }
 
@@ -19,8 +19,9 @@ const UserSchema = new Schema<IUser>({
 });
 
 UserSchema.index({ goblinPoints: -1 });
-
-// And for your search box
 UserSchema.index({ xUsername: "text" });
 
-export default models.User || model<IUser>("User", UserSchema);
+const User: Model<IUser> =
+  (mongoose.models && mongoose.models.User) || model<IUser>("User", UserSchema);
+
+export default User;
