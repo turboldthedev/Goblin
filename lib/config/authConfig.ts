@@ -6,18 +6,34 @@ import { SignJWT, jwtVerify } from "jose";
 import { jwt as upsertJwtToken } from "../utils/jwt";
 
 const ALGORITHM = "HS256";
+// debug-env.js
+const keys = [
+  "TWITTER_BEARER_TOKEN",
+  "TWITTER_CLIENT_ID",
+  "TWITTER_CLIENT_SECRET",
+  "NEXTAUTH_SECRET",
+  "NEXTAUTH_URL",
+  "NEXT_PUBLIC_BACKEND_URL",
+  "NEXT_PUBLIC_API_URL",
+  "NEXTAUTH_DEBUG",
+  "MONGODB_URI",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
+];
+
+console.log("=== ENVIRONMENT VARIABLES ===");
+keys.forEach((k) => {
+  console.log(`${k}:`, process.env[k]);
+});
 
 export const authOptions: NextAuthOptions = {
-  // used for both signing and (optional) encryption
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-
-  // Override NextAuth’s default encrypted JWE behavior
   jwt: {
-    // create a plain HS256‐signed token
     async encode({ token, secret, maxAge }): Promise<string> {
       const now = Math.floor(Date.now() / 1000);
       const claims = {
@@ -29,7 +45,6 @@ export const authOptions: NextAuthOptions = {
         .setProtectedHeader({ alg: ALGORITHM })
         .sign(new TextEncoder().encode(secret as string));
     },
-    // verify & decode that HS256‐signed token
     async decode({ token, secret }): Promise<JWT | null> {
       try {
         const { payload } = await jwtVerify(
