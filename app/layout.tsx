@@ -6,7 +6,8 @@ import { getServerSession } from "next-auth";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeClientProvider } from "@/components/ui/theme-provider";
 import ReferralHandler from "@/components/ReferralHandler";
-import { authOptions } from "@/lib/authConfig";
+import { authOptions } from "@/lib/config/authConfig";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   title: "Goblin",
@@ -33,6 +34,8 @@ export default async function RootLayout({
             >
               <ReferralHandler />
               {children}
+              <Analytics />
+
               <Toaster />
             </ThemeClientProvider>
           </SessionProvider>
