@@ -4,16 +4,31 @@ import type { JWT } from "next-auth/jwt";
 import TwitterProvider from "next-auth/providers/twitter";
 import { SignJWT, jwtVerify } from "jose";
 import { jwt as upsertJwtToken } from "../utils/jwt";
-import { loadSecrets } from "../load-secrets";
 
 const ALGORITHM = "HS256";
+// debug-env.js
+const keys = [
+  "TWITTER_BEARER_TOKEN",
+  "TWITTER_CLIENT_ID",
+  "TWITTER_CLIENT_SECRET",
+  "NEXTAUTH_SECRET",
+  "NEXTAUTH_URL",
+  "NEXT_PUBLIC_BACKEND_URL",
+  "NEXT_PUBLIC_API_URL",
+  "NEXTAUTH_DEBUG",
+  "MONGODB_URI",
+  "CLOUDINARY_CLOUD_NAME",
+  "CLOUDINARY_API_KEY",
+  "CLOUDINARY_API_SECRET",
+];
 
-const secrets = await loadSecrets();
-console.log("=== SECRETS ===");
-console.log(secrets);
+console.log("=== ENVIRONMENT VARIABLES ===");
+keys.forEach((k) => {
+  console.log(`${k}:`, process.env[k]);
+});
 
 export const authOptions: NextAuthOptions = {
-  secret: secrets.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
@@ -46,8 +61,8 @@ export const authOptions: NextAuthOptions = {
 
   providers: [
     TwitterProvider({
-      clientId: secrets.TWITTER_CLIENT_ID!,
-      clientSecret: secrets.TWITTER_CLIENT_SECRET!,
+      clientId: process.env.TWITTER_CLIENT_ID!,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
       version: "2.0",
       authorization: { params: { prompt: "login" } },
     }),
@@ -89,7 +104,9 @@ export const authOptions: NextAuthOptions = {
         sameSite: "lax",
         path: "/",
         domain:
-          secrets.NODE_ENV === "production" ? ".goblinbox.com" : "localhost",
+          process.env.NODE_ENV === "production"
+            ? ".goblinbox.com"
+            : "localhost",
       },
     },
   },
